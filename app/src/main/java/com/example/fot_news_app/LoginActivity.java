@@ -1,4 +1,4 @@
-package com.example.newsapp;
+package com.example.fot_news_app;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.example.fot_news_app.MainActivity; // Added import
+import com.example.fot_news_app.R; // Added import
+import com.example.fot_news_app.RegistrationActivity; // Added import
 
 public class LoginActivity extends AppCompatActivity {
     private TextInputEditText etEmail, etPassword;
@@ -26,9 +29,19 @@ public class LoginActivity extends AppCompatActivity {
         TextView tvRegister = findViewById(R.id.tvRegister);
         TextView tvForgotPassword = findViewById(R.id.tvForgotPassword);
 
+        // Add null checks for all views obtained via findViewById
+        if (etEmail == null || etPassword == null || btnLogin == null || tvRegister == null || tvForgotPassword == null) {
+            Toast.makeText(this, "Error initializing login screen. Please try again.", Toast.LENGTH_LONG).show();
+            // Depending on the severity, you might want to finish the activity
+            // finish(); 
+            return;
+        }
+
         btnLogin.setOnClickListener(v -> {
-            String email = etEmail.getText().toString().trim();
-            String password = etPassword.getText().toString().trim();
+            // It's safer to get text inside the listener, in case etEmail/etPassword were null initially
+            // but this is largely covered by the check above.
+            String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
+            String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
 
             if (TextUtils.isEmpty(email)) {
                 etEmail.setError("Email is required");
@@ -46,8 +59,11 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(new Intent(this, MainActivity.class));
                             finish();
                         } else {
-                            Toast.makeText(this, "Login failed: " + task.getException(),
-                                    Toast.LENGTH_SHORT).show();
+                            String errorMessage = "Login failed.";
+                            if (task.getException() != null) {
+                                errorMessage += " " + task.getException().getMessage();
+                            }
+                            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     });
         });
