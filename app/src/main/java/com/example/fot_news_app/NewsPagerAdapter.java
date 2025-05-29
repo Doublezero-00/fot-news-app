@@ -1,9 +1,10 @@
-package com.example.newsapp;
+package com.example.fot_news_app;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+import com.example.fot_news_app.NewsCategoryFragment; // Added import
 
 public class NewsPagerAdapter extends FragmentStateAdapter {
     public NewsPagerAdapter(@NonNull FragmentActivity fragmentActivity) {

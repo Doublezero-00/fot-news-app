@@ -1,8 +1,21 @@
-package com.example.newsapp;
+package com.example.fot_news_app;
+
+import com.example.fot_news_app.AppDatabase; // Added import
+import com.example.fot_news_app.NewsItem; // Added import
 
 public class DatabaseInitializer {
     public static void initialize(AppDatabase db) {
+        if (db == null) {
+            // Log.e("DatabaseInitializer", "AppDatabase instance is null. Cannot initialize data.");
+            return;
+        }
         new Thread(() -> {
+            // It's also good practice to ensure db.appDao() isn't null,
+            // though with Room setup this is highly unlikely unless db itself is a mock/bad state.
+            if (db.appDao() == null) {
+                // Log.e("DatabaseInitializer", "AppDao is null. Cannot initialize data.");
+                return;
+            }
             db.appDao().clearAllNews();
 
             // Sports news

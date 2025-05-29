@@ -1,4 +1,4 @@
-package com.example.newsapp;
+package com.example.fot_news_app;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -14,6 +14,13 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.example.fot_news_app.AppDatabase; // Added import
+import com.example.fot_news_app.R; // Added import
+import com.example.fot_news_app.SplashActivity; // Added import
+import com.example.fot_news_app.UserProfile; // Added import
+import android.content.Intent; // Added import
+import android.view.View; // Added import
+import androidx.appcompat.widget.Toolbar; // Added import
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,17 +47,21 @@ public class MainActivity extends AppCompatActivity
         TextView navEmail = headerView.findViewById(R.id.nav_header_email);
 
         FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
-            navEmail.setText(user.getEmail());
-            AppDatabase db = AppDatabase.getInstance(this);
-            new Thread(() -> {
-                UserProfile profile = db.appDao().getUserProfile(user.getUid());
-                runOnUiThread(() -> {
-                    if (profile != null) {
-                        navName.setText(profile.name);
-                    }
-                });
-            }).start();
+        if (user != null) { // Add null check for user
+            if (user.getEmail() != null) { // Add null check for email
+                navEmail.setText(user.getEmail());
+            }
+            if (user.getUid() != null) { // Add null check for UID
+                AppDatabase db = AppDatabase.getInstance(this);
+                new Thread(() -> {
+                    UserProfile profile = db.appDao().getUserProfile(user.getUid());
+                    runOnUiThread(() -> {
+                        if (profile != null) {
+                            navName.setText(profile.name);
+                        }
+                    });
+                }).start();
+            }
         }
 
         // Passing each menu ID as a set of Ids because each

@@ -1,9 +1,11 @@
-package com.example.newsapp;
+package com.example.fot_news_app;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import android.content.Context;
+import com.example.fot_news_app.NewsItem; // Added import
+import com.example.fot_news_app.UserProfile; // Added import
 
 @Database(entities = {UserProfile.class, NewsItem.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
@@ -19,7 +21,8 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class,
                             "news_app_db"
-                    ).build();
+                    ).fallbackToDestructiveMigration() // Added for development to handle schema changes
+                     .build();
                 }
             }
         }
